@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>TITLE</h1>
+    <div id="num_box"></div>
+    <button onclick="fncRandomSelect()">버튼</button>
+    <div>
+        <h3>HISTORY</h3>
+        <table>
+            <colgroup>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>내용</th>
+                    <th>일시</th>
+                </tr>
+            </thead>
+            <tbody id="history_box"></tbody>
+        </table>
+    </div>
+</body>
+<script>
+
+    const idxs = [0,0,0,0,0,0];
+    function fncRandomSelect(){
+        
+        let content = document.getElementById('num_box');
+        let table = document.getElementById('history_box');
+        let trSize = table.getElementsByTagName('tr');
+    
+        let randomVal;
+        for(let i = 0; i < 6; i++){
+            //번호 뽑기
+            let checkVal = false;
+            // 이전 순서 번호와 중복 검사 통과할때까지 
+            while(checkVal != true){
+                //1~45 범위의 랜덤 난수 생성
+                randomVal = Math.floor(Math.random() * 45) + 1;
+                //이전 순서 번호와 중복 검사
+                let checkCnt = 0;
+                for(let j =0; j < i; j++){
+                    if(idxs[j] != randomVal){
+                        checkCnt++;
+                    }
+                }
+                //중복 검사 통과시 true 반환    
+                if(checkCnt == i){
+                    checkVal = true;
+                }
+            }        
+            //뽑은 번호 배열에 저장
+            idxs[i] = randomVal;
+        };
+    
+        // 번호 순서대로 정렬
+        idxs.sort((a, b) => a - b);
+    
+        //결과 출력값 생성
+        let resultNums = '';
+        let addHistory = '<tr style="height:50px;"><td>'+trSize.length +'</td><td>';
+    
+        for(let j =0; j < 6; j++){
+            let color = '';
+            if(idxs[j] > 0 && idxs[j] < 11){
+                color = 'yellow'
+            }else if(idxs[j] > 10 && idxs[j] < 21){
+                color = 'blue'
+            }else if(idxs[j] > 20 && idxs[j] < 31){
+                color = 'red'
+            }else if(idxs[j] > 30 && idxs[j] < 41){
+                color = 'black'
+            }else if(idxs[j] > 40 && idxs[j] < 46){
+                color = 'green'
+            }  
+            resultNums += '<span style="padding:10px;border: 2px solid ' + color + ';border-radius: 50%;">'+idxs[j]+'</span>&nbsp&nbsp'
+        }
+        //현재 시간 출력
+        let today = new Date();
+        addHistory += resultNums+ '</td><td>'+today.toLocaleString()+'</td></tr>'
+    
+        content.innerHTML = resultNums;
+        table.insertRow(-1).innerHTML = addHistory;
+    };
+    
+    </script>
+</html>
